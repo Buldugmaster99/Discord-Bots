@@ -1,0 +1,31 @@
+{
+  "Token": "--Token--",
+  "Admin": "__id__",
+  "guilds": {
+    "__id__": {
+      "category": "__id__",
+      "timeout": "110",
+      "adminrole": "__id__"
+    },
+    "__id__": {
+      "category": "__id__",
+      "timeout": "120",
+      "adminrole": "__id__"
+    },
+    "__id__": {
+      "category": "__id__",
+      "timeout": "20",
+      "adminrole": "__id__"
+    },
+    "__id__": {
+      "category": "__id__",
+      "timeout": "20",
+      "adminrole": "__id__"
+    },
+    "__id__": {
+      "category": "__id__",
+      "timeout": "120",
+      "adminrole": "__id__"
+    }
+  }
+}
