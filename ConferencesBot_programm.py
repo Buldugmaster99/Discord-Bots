@@ -53,7 +53,6 @@ def replace(val):
 	return "not found"
 
 class Conference(object):
-
 	subject = ""
 	day = ""
 	time = ""
@@ -130,7 +129,7 @@ async def notifiy():
 			print(f"\nremoved {Conference.respond()}")
 			Conferences.remove(Conference)
 
-@commands.command()
+@bot.command()
 async def add(ctx, sub, date, time, maybe=False):
 	
 	if replace(sub.lower()) == "not found":
@@ -167,10 +166,8 @@ async def add(ctx, sub, date, time, maybe=False):
 		await ctx.send(f"```Python\nallready conference listed: {double.respond()} \n>remove {double.day.date().strftime('%d.%m.%Y')} {double.time} \nto delete previous entry```")
 		print(f"\nallready conference listed: {double.respond() }")
 
-bot.add_command(add)
 
-
-@commands.command()
+@bot.command()
 async def remove(ctx, date, time):
 	if len(date.split('.')) == 3:
 		day = datetime.datetime(int(date.split('.')[2]), int(date.split('.')[1]),int(date.split('.')[0]))
@@ -190,16 +187,13 @@ async def remove(ctx, date, time):
 		await ctx.send(f"```Python\nno Conference listed at: {day.date().strftime('%d.%m.%Y')} {time} \n>all \nto show all Conferences```")
 		print(f"\nno Conference listed at: {day.date().strftime('%d.%m.%Y')} {time}")
 
-bot.add_command(remove)
 
-@commands.command()
+@bot.command()
 async def rm(ctx, date, time):
 	await remove(ctx, date, time);
 
-bot.add_command(rm)
 
-
-@commands.command()
+@bot.command()
 async def all(ctx):
 	if len(Conferences) != 0:
 		prmap = {}
@@ -220,9 +214,7 @@ async def all(ctx):
 		await ctx.send("```Python\n No Conferences listed \n```")
 
 
-bot.add_command(all)
-
-@commands.command()
+@bot.command()
 async def link(ctx, sub):
 	try:
 		await ctx.send(f'link for {sub} is {links[replace(sub.lower())]}')
@@ -232,9 +224,7 @@ async def link(ctx, sub):
 		print(f'\nlink for {sub} not found')
 
 
-bot.add_command(link)
-
-@commands.command()
+@bot.command()
 async def set(ctx, args):
 	global notifychannel
 	if ctx.author.top_role.id == adminrole:
@@ -244,9 +234,8 @@ async def set(ctx, args):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(set)
 
-@commands.command()
+@bot.command()
 async def start(ctx):
 	if ctx.author.top_role.id == adminrole:
 		await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening,name = ">help"))
@@ -256,9 +245,8 @@ async def start(ctx):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(start)
 
-@commands.command()
+@bot.command()
 async def data(ctx):
 	if ctx.author.top_role.id == adminrole:
 		await ctx.send("``" + str(times) + "``")
@@ -274,9 +262,8 @@ async def data(ctx):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(data)
 
-@commands.command()
+@bot.command()
 async def ferien(ctx,startstop):
 	global hollidays
 	if ctx.author.top_role.id == adminrole:
@@ -293,9 +280,8 @@ async def ferien(ctx,startstop):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(ferien)
 
-@commands.command()
+@bot.command()
 async def loadjson(ctx):
 	if ctx.author.top_role.id == adminrole:
 		loadjsonvalues("ConferencesBot_data.json")
@@ -303,7 +289,6 @@ async def loadjson(ctx):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(loadjson)
 
 @bot.command()
 async def help(ctx):
@@ -351,12 +336,11 @@ async def help(ctx):
 
 	await ctx.send(f"```{s}```")
 
-@commands.command()
+@bot.command()
 async def ontime(ctx):
 	await ctx.send(f'ontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 	print(f'\nontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 
-bot.add_command(ontime)
 
 loadjsonvalues("ConferencesBot_data.json")
 

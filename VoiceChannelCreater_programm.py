@@ -64,7 +64,7 @@ async def testing():
 	remch.clear()
 	
 	
-@commands.command()
+@bot.command()
 async def timeout(ctx, args=None):
 	if args == None:
 		await ctx.channel.send(f'timeout = {guilds[str(ctx.guild.id)]["timeout"]}')
@@ -82,9 +82,8 @@ async def timeout(ctx, args=None):
 	else:
 		await ctx.send("not allowed (Admin command)")
 
-bot.add_command(timeout)
 
-@commands.command()
+@bot.command()
 async def category(ctx, args=None):
 	if args == None:
 		await ctx.channel.send(f'category = {ctx.guild.get_channel(int(guilds[str(ctx.guild.id)]["category"]))}')
@@ -96,9 +95,8 @@ async def category(ctx, args=None):
 	else:
 		await ctx.send("not allowed (Admin command)")
 
-bot.add_command(category)
 
-@commands.command()
+@bot.command()
 async def start(ctx):
 	if ctx.author.avatar == Admin:
 		await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening,name = "_help"))
@@ -109,9 +107,8 @@ async def start(ctx):
 		await ctx.send("not allowed (owner command)")
 		print(ctx.author.avatar)
 
-bot.add_command(start)
 
-@commands.command()
+@bot.command()
 async def setadmin(ctx,args):
 	global guilds
 	if ctx.author.avatar == Admin:
@@ -122,9 +119,8 @@ async def setadmin(ctx,args):
 	else:
 		await ctx.send("not allowed (owner command)")
 
-bot.add_command(setadmin)
 
-@commands.command()
+@bot.command()
 async def c(ctx,*args):
 	try:
 		guilds[str(ctx.guild.id)]
@@ -149,9 +145,7 @@ async def c(ctx,*args):
 	channels[ch] = [time(),str(ctx.guild.id),ctx.channel]
 	await ctx.channel.send(f'{ch} created in {ctx.guild.get_channel(int(guilds[str(ctx.guild.id)]["category"]))}')
 	print(f'\n{ctx.guild.name}:  {ch} created in {ctx.guild.get_channel(int(guilds[str(ctx.guild.id)]["category"]))}')
-	
 
-bot.add_command(c)
 
 @bot.command()
 async def help(ctx):
@@ -193,12 +187,11 @@ async def help(ctx):
 
 	await ctx.send(f"```{s}```")
 
-@commands.command()
+@bot.command()
 async def ontime(ctx):
 	await ctx.send(f'ontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 	print(f'\nontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 
-bot.add_command(ontime)
 
 loadjsonvalues("VoiceChannelCreaterBot_data.json")
 

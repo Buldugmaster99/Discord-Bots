@@ -67,7 +67,7 @@ async def repeat():
 		print(e)
 
 
-@commands.command()
+@bot.command()
 async def stage(ctx, args=None, remove=None):
 	if args == None:
 		await ctx.channel.send(f'stages = {stages}')
@@ -84,9 +84,8 @@ async def stage(ctx, args=None, remove=None):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(stage)
 
-@commands.command()
+@bot.command()
 async def channel(ctx, args=None):
 	global reportchannel
 	if args == None:
@@ -98,9 +97,8 @@ async def channel(ctx, args=None):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(channel)
 
-@commands.command()
+@bot.command()
 async def deletetime(ctx, args=None):
 	global deletetimeint
 	if args == None:
@@ -112,9 +110,8 @@ async def deletetime(ctx, args=None):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(deletetime)
 
-@commands.command()
+@bot.command()
 async def start(ctx):
 	global started
 	if ctx.author.top_role.id == Admin:
@@ -129,7 +126,6 @@ async def start(ctx):
 	else:
 		await ctx.send("not allowed")
 
-bot.add_command(start)
 
 @bot.command()
 async def help(ctx):
@@ -166,11 +162,10 @@ async def help(ctx):
 
 	await ctx.send(f"```{s}```")
 
-@commands.command()
+@bot.command()
 async def ontime(ctx):
 	await ctx.send(f'ontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 	print(f'\nontime: {str(datetime.datetime.now() - starttime).split(".")[0]}')
 
-bot.add_command(ontime)
 
 bot.run(Token)
