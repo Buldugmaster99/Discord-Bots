@@ -1,0 +1,17 @@
+{
+  "Token": "--Token--",
+  "Admin": 456469645155893253,
+  "guilds": {
+    "--id--": {
+      "category": null,
+      "timeout": 120,
+      "name": "test",
+      "countup": true,
+      "defaultmaxmembers": 3,
+      "maxmembers": 12,
+      "maxpause": 120,
+      "monitorchannel": null,
+      "adminrole": "--id--"
+    }
+  }
+}
