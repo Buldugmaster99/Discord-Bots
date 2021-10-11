@@ -3,37 +3,37 @@ from discord.ext.commands import Context
 
 import datetime
 
-
 import VoiceChannelBot_globals as Globals
 
 
 @Globals.bot.command()
 async def category(ctx: Context, args: str = None):
-    if args == None:
+    if args is None:
         await ctx.channel.send(f'category = {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["category"])}')
     elif ctx.author.top_role.id == Globals.guilds[str(ctx.guild.id)]["adminrole"]:
         try:
             int(args)
-        except:
+        except TypeError:
             await ctx.send(f'category id must be a number {args}')
             print(f'\ncategory id must be a number {args}')
             return
         Globals.guilds[str(ctx.guild.id)]["category"] = int(args)
         Globals.savejsonvalues(Globals.datafile)
         await ctx.send(f'category changed to {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["category"])}')
-        print(f'\n{ctx.guild.name}:  changed category to {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["category"])}  args: {args}')
+        print(
+            f'\n{ctx.guild.name}:  changed category to {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["category"])}  args: {args}')
     else:
         await ctx.send("not allowed (Admin command)")
 
 
 @Globals.bot.command()
 async def timeout(ctx: Context, args: str = None):
-    if args == None:
+    if args is None:
         await ctx.channel.send(f'timeout = {Globals.guilds[str(ctx.guild.id)]["timeout"]}')
     elif ctx.author.top_role.id == Globals.guilds[str(ctx.guild.id)]["adminrole"]:
         try:
             int(args)
-        except:
+        except TypeError:
             await ctx.send(f'timeout must be a number {args}')
             print(f'\ntimeout must be a number {args}')
             return
@@ -56,7 +56,8 @@ async def create(ctx: Context, *args: str):
         Globals.guilds[str(ctx.guild.id)]["monitorchannel"] = ch.id
         Globals.savejsonvalues(Globals.datafile)
         await ctx.send(f'creationchannel created: {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["monitorchannel"])}')
-        print(f'\n{ctx.guild.name}:  creationchannel created: {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["monitorchannel"])}  args: {args}')
+        print(
+            f'\n{ctx.guild.name}:  creationchannel created: {ctx.guild.get_channel(Globals.guilds[str(ctx.guild.id)]["monitorchannel"])}  args: {args}')
     else:
         await ctx.send("not allowed (Admin command)")
 
@@ -65,22 +66,23 @@ async def create(ctx: Context, *args: str):
 async def setup(ctx: Context, countup: str, defaultmaxmembers: str, maxmembers: str, maxpause: str):
     if ctx.author.top_role.id == Globals.guilds[str(ctx.guild.id)]["adminrole"]:
         try:
-            if countup != None and countup != "-" and countup != "no":
+            if countup is not None and countup != "-" and countup != "no":
                 Globals.guilds[str(ctx.guild.id)]["countup"] = countup.capitalize() == "True" or countup == "1"
                 await ctx.send(f'countup changed to {Globals.guilds[str(ctx.guild.id)]["countup"]}')
                 print(f'\n{ctx.guild.name}:  countup changed to {Globals.guilds[str(ctx.guild.id)]["countup"]} {countup}')
-            
-            if defaultmaxmembers != None and defaultmaxmembers != "-" and defaultmaxmembers != "no":
+
+            if defaultmaxmembers is not None and defaultmaxmembers != "-" and defaultmaxmembers != "no":
                 Globals.guilds[str(ctx.guild.id)]["defaultmaxmembers"] = int(defaultmaxmembers)
                 await ctx.send(f'defaultmaxmembers changed to {Globals.guilds[str(ctx.guild.id)]["defaultmaxmembers"]}')
-                print(f'\n{ctx.guild.name}:  defaultmaxmembers changed to {Globals.guilds[str(ctx.guild.id)]["defaultmaxmembers"]} {defaultmaxmembers}')
-            
-            if maxmembers != None and maxmembers != "-" and maxmembers != "no":
+                print(
+                    f'\n{ctx.guild.name}:  defaultmaxmembers changed to {Globals.guilds[str(ctx.guild.id)]["defaultmaxmembers"]} {defaultmaxmembers}')
+
+            if maxmembers is not None and maxmembers != "-" and maxmembers != "no":
                 Globals.guilds[str(ctx.guild.id)]["maxmembers"] = int(maxmembers)
                 await ctx.send(f'maxmembers changed to {Globals.guilds[str(ctx.guild.id)]["maxmembers"]}')
                 print(f'\n{ctx.guild.name}:  maxmembers changed to {Globals.guilds[str(ctx.guild.id)]["maxmembers"]} {maxmembers}')
-            
-            if maxpause != None and maxpause != "-" and maxpause != "no":
+
+            if maxpause is not None and maxpause != "-" and maxpause != "no":
                 Globals.guilds[str(ctx.guild.id)]["maxpause"] = int(maxpause)
                 await ctx.send(f'maxpause changed to {Globals.guilds[str(ctx.guild.id)]["maxpause"]}')
                 print(f'\n{ctx.guild.name}:  maxpause changed to {Globals.guilds[str(ctx.guild.id)]["maxpause"]} {maxpause}')
@@ -88,7 +90,7 @@ async def setup(ctx: Context, countup: str, defaultmaxmembers: str, maxmembers: 
 
         except Exception as e:
             await ctx.send(f'error occured: {e}')
-                        
+
     else:
         await ctx.send("not allowed (Admin command)")
 
@@ -101,7 +103,7 @@ async def name(ctx: Context, *args: str):
         st = ""
         for s in args:
             st += s + " "
-            
+
         Globals.guilds[str(ctx.guild.id)]["name"] = st.strip()
         Globals.savejsonvalues(Globals.datafile)
         await ctx.send(f'name changed to {Globals.guilds[str(ctx.guild.id)]["name"]}')
@@ -112,17 +114,17 @@ async def name(ctx: Context, *args: str):
 
 @Globals.bot.command()
 async def rename(ctx: Context, *args: str):
-    if ctx.author.voice == None:
+    if ctx.author.voice is None:
         await ctx.send('You have to be connected to a voice channel')
         return
-    
+
     ch: Globals.Channel = None
 
     for Channel in Globals.channels:
         if Channel.voiceChannel == ctx.author.voice.channel:
             ch = Channel
 
-    if ch == None:
+    if ch is None:
         await ctx.send(f'You have to be connected to a {Globals.guilds[str(ctx.guild.id)]["name"]} channel')
         return
 
@@ -140,21 +142,23 @@ async def rename(ctx: Context, *args: str):
 
 @Globals.bot.command()
 async def pause(ctx: Context, args: str = None):
-    if ctx.author.voice == None:
+    if ctx.author.voice is None:
         await ctx.send('You have to be connected to a voice channel')
         return
+
+    ch = None
 
     for Channel in Globals.channels:
         if Channel.voiceChannel == ctx.author.voice.channel:
             ch = Channel
 
-    if ch == None:
+    if ch is None:
         await ctx.send(f'You have to be connected to a {Globals.guilds[str(ctx.guild.id)]["name"]} channel')
         return
 
     try:
         int(args)
-    except Exception:
+    except TypeError:
         await ctx.send(f'invalid pause time: {args}min')
         return
 
@@ -162,29 +166,29 @@ async def pause(ctx: Context, args: str = None):
         await ctx.send(f'invalid pause time: {args} min \nmust be between 5 min and {Globals.guilds[str(ctx.guild.id)]["maxpause"]} min')
         return
 
-    ch.update(int(args)*60)
+    ch.update(int(args) * 60)
     await ctx.send(f'{ch.voiceChannel} paused for {int(args)} min')
-    print(f'\n{ctx.guild.name}:  {ch.voiceChannel} paused for {int(args)} min / {int(args)*60} sec')
+    print(f'\n{ctx.guild.name}:  {ch.voiceChannel} paused for {int(args)} min / {int(args) * 60} sec')
 
 
 @Globals.bot.command()
 async def limit(ctx: Context, args: str = None):
-    if ctx.author.voice == None:
+    if ctx.author.voice is None:
         await ctx.send('You have to be connected to a voice channel')
         return
-    
+
     ch: Globals.Channel = None
     for Channel in Globals.channels:
         if Channel.voiceChannel == ctx.author.voice.channel:
             ch = Channel
 
-    if ch == None:
+    if ch is None:
         await ctx.send(f'You have to be connected to a {Globals.guilds[str(ctx.guild.id)]["name"]} channel')
         return
 
     try:
         int(args)
-    except Exception:
+    except TypeError:
         await ctx.send(f'invalid limit count: {args}')
         return
 
@@ -201,7 +205,8 @@ async def limit(ctx: Context, args: str = None):
 async def start(ctx: Context):
     if ctx.author.id == Globals.Admin:
         Globals.started = True
-        await Globals.bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name="?help"))
+        await Globals.bot.change_presence(status=discord.Status.online,
+                                          activity=discord.Activity(type=discord.ActivityType.listening, name="?help"))
         if not Globals.testing.is_running:
             Globals.testing.start()
         await ctx.send(f'started')
@@ -212,17 +217,17 @@ async def start(ctx: Context):
 
 @Globals.bot.command()
 async def setadmin(ctx: Context, args: str):
-    global guilds
     if ctx.author.id == Globals.Admin:
         try:
             int(args)
-        except:
+        except TypeError:
             await ctx.send(f'adminrole must be a number {args}')
             print(f'\nadminrole must be a number {args}')
             return
-        
+
         Globals.guilds[str(ctx.guild.id)] = {"category": None, "timeout": 120, "name": "New Channel", "countup": True,
-                                     "defaultmaxmembers": 3, "maxmembers": 12, "maxpause": 120, "monitorchannel": None, "adminrole": int(args)}
+                                             "defaultmaxmembers": 3, "maxmembers": 12, "maxpause": 120, "monitorchannel": None,
+                                             "adminrole": int(args)}
         Globals.savejsonvalues(Globals.datafile)
         await ctx.send(f'server adminrole changed to {ctx.guild.get_role(int(args))}')
         print(f'\n{ctx.guild.name}:  server adminrole changed to {ctx.guild.get_role(int(args))}')

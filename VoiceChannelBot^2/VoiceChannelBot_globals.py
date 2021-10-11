@@ -8,21 +8,22 @@ import datetime
 import json
 import traceback
 
+
 class Channel:
     voiceChannel: VoiceChannel = None
-    deletetime: int = None
+    deleteTime: int = None
     guild: Guild = None
     count: int = None
 
-    def __init__(self, channel: VoiceChannel, deletetime: int, guild: Guild, count: int):
+    def __init__(self, channel: VoiceChannel, deleteTime: int, guild: Guild, count: int):
         self.voiceChannel = channel
-        self.deletetime = deletetime
+        self.deleteTime = deleteTime
         self.guild = guild
         self.count = count
 
     def update(self, timeout: int):
-        if self.deletetime < time() + timeout:
-            self.deletetime = time() + timeout
+        if self.deleteTime < time() + timeout:
+            self.deleteTime = int(time() + timeout)
 
 
 guilds: dict[str, dict[str, type]] = {}
@@ -33,13 +34,13 @@ started: bool = False
 
 starttime: datetime = None
 
-
 Token: str = None
 Admin: int = None
 
 bot: commands.Bot = commands.Bot(command_prefix="?", help_command=None)
 
 datafile: str = "VoiceChannelBot_data.json"
+
 
 def loadjsonvalues(path: str):
     global Token, guilds, Admin
@@ -52,12 +53,9 @@ def loadjsonvalues(path: str):
 
 def savejsonvalues(path: str):
     with open(path, 'w') as file:
-        data = {}
-        data["Token"] = Token
-        data["Admin"] = Admin
-        data["guilds"] = guilds
-        json.dump(data, file, indent=2)    
-        
+        data = {"Token": Token, "Admin": Admin, "guilds": guilds}
+        json.dump(data, file, indent=2)
+
 
 @tasks.loop(seconds=5)
 async def testing():
@@ -67,11 +65,11 @@ async def testing():
         try:
             if len(ch.voiceChannel.members) > 0:
                 ch.update(int(guilds[str(ch.guild.id)]["timeout"]))
-            elif ch.deletetime < time():
+            elif ch.deleteTime < time():
                 await ch.voiceChannel.delete()
                 print(f'\n{ch.guild.name}:  {ch.voiceChannel} deleted')
                 remch.append(ch)
-        except Exception as ex:
+        except Exception:
             traceback.print_exc()
             remch.append(ch)
     for ch2 in remch:
