@@ -1,0 +1,17 @@
+{
+  "Token": "__TOKEN__",
+  "Admin": __ADMIN_ID__,
+  "guilds": {
+    "__SERVER_ID__": {
+      "category": __CATEGORY_ID__,
+      "timeout": 120,
+      "name": "New VC",
+      "countup": true,
+      "defaultmaxmembers": 3,
+      "maxmembers": 12,
+      "maxpause": 120,
+      "monitorchannel": __MONITOR_CHANNEL_ID__,
+      "adminrole": __SERVER_ADMIN_ROLE_ID__
+    }
+  }
+}
