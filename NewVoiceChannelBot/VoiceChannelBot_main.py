@@ -51,7 +51,6 @@ Globals.bot.add_listener(on_voice_state_update)
 
 if __name__ == "__main__":
 	Globals.loadjsonvalues(Globals.datafile)
-	
-	starttime = datetime.datetime.now()
+	Globals.starttime = datetime.datetime.now()
 	
 	Globals.bot.run(Globals.Token)
