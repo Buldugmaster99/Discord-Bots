@@ -1,77 +1,88 @@
-import datetime
 import json
-import traceback
+import logging
+from dataclasses import dataclass
 from time import time
+from typing import List, Dict
 
-from discord.channel import VoiceChannel
-from discord.ext import commands, tasks
-from discord.guild import Guild
-
-
-class Channel:
-	voiceChannel: VoiceChannel = None
-	deleteTime: int = None
-	guild: Guild = None
-	count: int = None
-	
-	def __init__(self, channel: VoiceChannel, deleteTime: int, guild: Guild, count: int):
-		self.voiceChannel = channel
-		self.deleteTime = deleteTime
-		self.guild = guild
-		self.count = count
-	
-	def update(self, timeout: int):
-		if self.deleteTime < time() + timeout:
-			self.deleteTime = int(time() + timeout)
+import interactions
+from dataclasses_json import dataclass_json
+from interactions import Guild
 
 
-# guilds: dict[str, dict[str, type]] = {}
-guilds = {}
+class CommandException(Exception):
+    pass
 
-# channels: list[Channel] = []
-channels = []
 
-started: bool = False
+@dataclass
+class CChannel:
+    voiceChannel: interactions.Channel = None
+    deleteTime: int = None
+    guild: interactions.Guild = None
+    count: int = None
 
-starttime: datetime = None
+    def update(self, timeout: int):
+        if self.deleteTime < time() + timeout:
+            self.deleteTime = int(time() + timeout)
 
-Token: str = None
-Admin: int = None
 
-bot: commands.Bot = commands.Bot(command_prefix="?", help_command=None)
+@dataclass_json
+@dataclass
+class CustomGuild:
+    category_id: int | None
+    timeout: int | None
+    new_channel_name: str
+    default_max_members: int
+    monitor_voice_channel_id: int
+
+
+guilds: Dict[int, CustomGuild] = {}
+
+channels: List[CChannel] = []
+
+ids = [821030130703925248]
+
+bot = interactions.Client(token="__TOKEN__", default_scope=ids)
 
 datafile: str = "VoiceChannelBot_data.json"
 
 
+def log(mess: str, guild: Guild):
+    logging.info(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}")
+
+
+def err(mess: str, guild: Guild | None = None):
+    logging.error(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}")
+
+
 def loadjsonvalues(path: str):
-	global Token, guilds, Admin
-	with open(path, 'r') as file:
-		json_data = json.load(file)
-		Token = json_data["Token"]
-		Admin = json_data["Admin"]
-		guilds = json_data["guilds"]
+    with open(path, 'r') as file:
+        json_data = json.load(file)
+        for guild in json_data["guilds"]:
+            guilds[int(guild)] = CustomGuild.from_dict(json_data["guilds"][guild])
+
+    logging.info(guilds)
+#
+#
+# def savejsonvalues(path: str):
+#     with open(path, 'w') as file:
+#         data = {"guilds": guilds}
+#         json.dump(data, file, indent=2)
 
 
-def savejsonvalues(path: str):
-	with open(path, 'w') as file:
-		data = {"Token": Token, "Admin": Admin, "guilds": guilds}
-		json.dump(data, file, indent=2)
-
-
-@tasks.loop(seconds=5)
-async def testing():
-	removeChannels = []
-	for ch in channels:
-		try:
-			if len(ch.voiceChannel.members) > 0:
-				ch.update(int(guilds[str(ch.guild.id)]["timeout"]))
-			elif ch.deleteTime < time():
-				await ch.voiceChannel.delete()
-				print(f'\n{ch.guild.name}:  {ch.voiceChannel} deleted')
-				removeChannels.append(ch)
-		except Exception:
-			traceback.print_exc()
-			removeChannels.append(ch)
-	for ch2 in removeChannels:
-		channels.remove(ch2)
-	removeChannels.clear()
+# @tasks.loop(seconds=5)
+# async def testing():
+#     removeChannels = []
+#     for ch in channels:
+#         try:
+#             if len(ch.voiceChannel.members) > 0:
+#                 ch.update(int(guilds[str(ch.guild.id)]["timeout"]))
+#             elif ch.deleteTime < time():
+#                 await ch.voiceChannel.delete()
+#                 print(f'\n{ch.guild.name}:  {ch.voiceChannel} deleted')
+#                 removeChannels.append(ch)
+#         except Exception:
+#             traceback.print_exc()
+#             removeChannels.append(ch)
+#     for ch2 in removeChannels:
+#         channels.remove(ch2)
+#     removeChannels.clear()
