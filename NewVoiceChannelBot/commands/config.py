@@ -1,4 +1,4 @@
-from typing import List
+import logging
 
 import interactions
 from interactions import Channel, Guild, Member, EmbedField
@@ -53,37 +53,36 @@ from NewVoiceChannelBot import globals as glob
 )
 async def _config(ctx: CommandContext, category: Channel = None, timeout: int = None, monitor_voice_channel: Channel = None,
                   new_channel_name: str = None, default_max_members: int = None):
-    # try:
-    guild = await ctx.get_guild()
-    my_guild = await _check_guild(int(ctx.guild_id))
-    member = await _get_pub_member(guild)
+    try:
+        guild = await ctx.get_guild()
+        my_guild = await _check_guild(int(ctx.guild_id))
+        member = await _get_pub_member(guild)
 
-    fields: list[EmbedField] = []
-    fields.append(await _handle_category(category, guild, my_guild)),
-    fields.append(await _handle_timeout(timeout, guild, my_guild)),
-    fields.append(await _handle_monitor_VoiceChannel(monitor_voice_channel, guild, my_guild)),
-    fields.append(await _handle_new_channel_name(new_channel_name, guild, my_guild)),
-    fields.append(await _handle_default_max_members(default_max_members, guild, my_guild))
+        fields: list[EmbedField] = []
+        fields.append(await _handle_category(category, guild, my_guild)),
+        fields.append(await _handle_timeout(timeout, guild, my_guild)),
+        fields.append(await _handle_monitor_VoiceChannel(monitor_voice_channel, guild, my_guild)),
+        fields.append(await _handle_new_channel_name(new_channel_name, guild, my_guild)),
+        fields.append(await _handle_default_max_members(default_max_members, guild, my_guild))
 
-    embed = interactions.Embed(
-        title="Config",
-        color=255,
-        footer=interactions.EmbedFooter(text=guild.name, icon_url=guild.icon_url),
-        author=interactions.EmbedAuthor(name=member.name, icon_url=glob.bot.me.icon_url),
-        fields=fields
-    )
+        embed = interactions.Embed(
+            title="Config",
+            color=255,
+            footer=interactions.EmbedFooter(text=guild.name, icon_url=guild.icon_url),
+            author=interactions.EmbedAuthor(name=member.name, icon_url=glob.bot.me.icon_url),
+            fields=fields
+        )
 
-    await ctx.send(embeds=embed)
+        await ctx.send(embeds=embed)
 
-
-# except glob.CommandException as e:
-#     await ctx.send(f"Exception occurred: {e}")  # show custom exceptions
-#     logging.error(f"Exception occurred {e}")
-#     return
-# except Exception as e:
-#     await ctx.send(f"Exception occurred")  # hide real exceptions
-#     logging.error(f"Exception occurred {e}")
-#     return
+    except glob.CommandException as e:
+        await ctx.send(f"Exception occurred: {e}")  # show custom exceptions
+        logging.error(f"Exception occurred {e}")
+        return
+    except Exception as e:
+        await ctx.send(f"Exception occurred")  # hide real exceptions
+        logging.error(f"Exception occurred {e}")
+        return
 
 
 async def _get_pub_member(_guild: Guild) -> Member:

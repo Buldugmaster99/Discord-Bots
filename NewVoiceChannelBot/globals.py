@@ -1,5 +1,5 @@
 import json
-import logging
+import sys
 from dataclasses import dataclass
 from time import time
 from typing import List, Dict
@@ -7,6 +7,7 @@ from typing import List, Dict
 import interactions
 from dataclasses_json import dataclass_json
 from interactions import Guild
+from interactions.ext.voice import setup, VoiceState
 
 
 class CommandException(Exception):
@@ -39,19 +40,22 @@ guilds: Dict[int, CustomGuild] = {}
 
 channels: List[CChannel] = []
 
-ids = [821030130703925248]
+ids = 821030130703925248
 
-bot = interactions.Client(token="__TOKEN__", default_scope=ids)
+bot = interactions.Client(token="", default_scope=ids)
+# setup(bot)
+
 
 datafile: str = "VoiceChannelBot_data.json"
 
 
 def log(mess: str, guild: Guild):
-    logging.info(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}")
+    print(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}")
 
 
 def err(mess: str, guild: Guild | None = None):
-    logging.error(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}")
+    print(f"guild:{guild.name if guild is not None else '--missing--'}[{guild.id if guild is not None else '--missing--'}] {mess}",
+          file=sys.stderr)
 
 
 def loadjsonvalues(path: str):
@@ -60,8 +64,9 @@ def loadjsonvalues(path: str):
         for guild in json_data["guilds"]:
             guilds[int(guild)] = CustomGuild.from_dict(json_data["guilds"][guild])
 
-    logging.info(guilds)
-#
+    print(guilds)
+
+
 #
 # def savejsonvalues(path: str):
 #     with open(path, 'w') as file:

@@ -1,21 +1,33 @@
 import logging
 
-import interactions
+from interactions import PresenceActivityType, ClientPresence, StatusType, PresenceActivity, CommandContext
+from interactions.ext.voice import VoiceState
 
-import VoiceChannelBot_commands
-import VoiceChannelBot_globals as Globals
+from NewVoiceChannelBot import globals as glob
+from commands import config, rename
 
-# must be imported else commands will not be applied
-
-_ = VoiceChannelBot_commands
+_ = config, rename  # prevent unused import warnings
 
 
-@Globals.bot.event
-async def on_ready():
-    print('Ready')
-    await Globals.bot.change_presence(interactions.ClientPresence(staus=interactions.StatusType.ONLINE, activities=[
-        interactions.PresenceActivity(name="/help", type=interactions.PresenceActivityType.WATCHING, created_at=0, emoji=":)")
+@glob.bot.event
+async def on_start():
+    await glob.bot.change_presence(ClientPresence(staus=StatusType.ONLINE, activities=[
+        PresenceActivity(name="/help", type=PresenceActivityType.COMPETING, created_at=120)
     ]))
+
+
+@glob.bot.command(
+    name="test",
+    description="test",
+    dm_permission=False
+)
+async def _test(ctx: CommandContext):
+    await ctx.send("test")
+
+
+@glob.bot.event
+async def on_voice_state_update(vs: VoiceState):
+    print(vs.self_mute)
 
 
 # @commands.Cog.listener()
@@ -47,9 +59,9 @@ async def on_ready():
 # Globals.bot.add_listener(on_voice_state_update)
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    Globals.loadjsonvalues(Globals.datafile)
+    logging.disable(level=logging.DEBUG)
+    glob.loadjsonvalues(glob.datafile)
 
     # Globals.starttime = datetime.datetime.now()
 
-    Globals.bot.start()
+    glob.bot.start()
